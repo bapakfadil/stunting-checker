@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 
 class ChildController extends Controller
 {
-    public function createStepOne(Request $request)
+    public function firstForm(Request $request)
     {
-        return view('children.create-step-one');
+        return view('children.first-form');
     }
 
-    public function postCreateStepOne(Request $request)
+    public function postFirstForm(Request $request)
     {
         $validatedData = $request->validate([
             'full_name' => 'required|string|max:255',
@@ -27,21 +27,21 @@ class ChildController extends Controller
 
         $request->session()->put('child_id', $child->id);
 
-        return redirect()->route('children.create.step.two');
+        return redirect()->route('children.secondForm');
     }
 
-    public function createStepTwo(Request $request)
+    public function secondForm(Request $request)
     {
         $child_id = $request->session()->get('child_id');
 
         if (!$child_id) {
-            return redirect()->route('children.create.step.one');
+            return redirect()->route('children.firstForm');
         }
 
-        return view('children.create-step-two');
+        return view('children.second-form');
     }
 
-    public function postCreateStepTwo(Request $request)
+    public function postSecondForm(Request $request)
     {
         $validatedData = $request->validate([
             'height' => 'required|numeric',
@@ -52,7 +52,7 @@ class ChildController extends Controller
         $child_id = $request->session()->get('child_id');
 
         if (!$child_id) {
-            return redirect()->route('children.create.step.one');
+            return redirect()->route('children.firstForm');
         }
 
         $stuntingCheck = new StuntingCheck();
