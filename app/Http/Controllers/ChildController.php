@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Child;
 use App\Models\StuntingCheck;
+use App\Models\Symptom;
 use Illuminate\Http\Request;
 
 class ChildController extends Controller
 {
-    public function firstForm(Request $request)
+    public function createStepOne()
     {
-        return view('children.first-form');
+        return view('children.create-step-one');
     }
 
-    public function postFirstForm(Request $request)
+    public function postCreateStepOne(Request $request)
     {
         $validatedData = $request->validate([
             'full_name' => 'required|string|max:255',
@@ -21,72 +22,93 @@ class ChildController extends Controller
             'date_of_birth' => 'required|date',
             'father_name' => 'required|string|max:255',
             'mother_name' => 'required|string|max:255',
+            'is_poor_family' => 'required|boolean',
         ]);
 
         $child = Child::create($validatedData);
 
         $request->session()->put('child_id', $child->id);
 
-        return redirect()->route('children.secondForm');
+        return redirect()->route('children.createStepTwo');
     }
 
-    public function secondForm(Request $request)
+    public function createStepTwo(Request $request)
     {
         $child_id = $request->session()->get('child_id');
+        $symptoms = Symptom::all();
 
         if (!$child_id) {
-            return redirect()->route('children.firstForm');
+            return redirect()->route('children.createStepOne');
         }
 
-        return view('children.second-form');
+        return view('children.create-step-two', compact('symptoms'));
     }
 
-    public function postSecondForm(Request $request)
+    public function postCreateStepTwo(Request $request)
     {
         $validatedData = $request->validate([
-            'height' => 'required|numeric',
-            'weight' => 'required|numeric',
-            'is_poor_family' => 'required|boolean',
+            'symptoms' => 'required|array',
         ]);
 
         $child_id = $request->session()->get('child_id');
 
         if (!$child_id) {
-            return redirect()->route('children.firstForm');
+            return redirect()->route('children.create.step.one');
         }
 
         $stuntingCheck = new StuntingCheck();
         $stuntingCheck->child_id = $child_id;
-        $stuntingCheck->height = $validatedData['height'];
-        $stuntingCheck->weight = $validatedData['weight'];
-        $stuntingCheck->is_poor_family = $validatedData['is_poor_family'];
-
-        // Logika penilaian stunting
-        $stuntingCheck->stunting_status = $this->checkStuntingStatus($validatedData['height'], $validatedData['weight']);
-
         $stuntingCheck->save();
 
-        return redirect()->route('children.index');
+        $stuntingCheck->symptoms()->attach($validatedData['symptoms']);
+
+        // Logika penilaian stunting menggunakan aturan yang sudah ditentukan
+        $stuntingCheck->stunting_status = $this->calculateStuntingStatus($validatedData['symptoms']);
+        $stuntingCheck->save();
+
+        return redirect()->route('dashboard');
     }
 
-    public function index()
+    private function calculateStuntingStatus($symptoms)
     {
-        $children = Child::with('stuntingCheck')->get();
+        $rules = [
+            'Gizi Lebih' => [1, 2, 3],
+            'Marasmik-kwashiorkor' => [4, 5, 6, 7, 8, 9],
+            // Tambahkan aturan lainnya sesuai jurnal
+        ];
 
-        return view('children.index', compact('children'));
-    }
-
-    private function checkStuntingStatus($height, $weight)
-    {
-        // Logika sederhana untuk penilaian stunting
-        // Ideal values dapat disesuaikan dengan standar WHO atau lainnya
-        $idealHeight = 75; // contoh ideal height
-        $idealWeight = 10; // contoh ideal weight
-
-        if ($height < $idealHeight || $weight < $idealWeight) {
-            return 'stunting';
+        foreach ($rules as $status => $ruleSymptoms) {
+            if (empty(array_diff($ruleSymptoms, $symptoms))) {
+                return $status;
+            }
         }
 
-        return 'normal';
+        return 'Normal';
+    }
+
+    public function show($id)
+    {
+        $child = Child::with('stuntingCheck.symptoms')->findOrFail($id);
+        return view('children.show', compact('child'));
+    }
+
+    public function edit($id)
+    {
+        $child = Child::findOrFail($id);
+        return view('children.edit', compact('child'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $child = Child::findOrFail($id);
+        $child->update($request->all());
+        return redirect()->route('dashboard');
+    }
+
+    public function destroy($id)
+    {
+        $child = Child::findOrFail($id);
+        $child->delete();
+        return redirect()->route('dashboard');
     }
 }

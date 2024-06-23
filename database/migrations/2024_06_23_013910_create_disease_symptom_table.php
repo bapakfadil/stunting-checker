@@ -8,19 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('stunting_checks', function (Blueprint $table) {
+        Schema::create('disease_symptom', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('child_id')->constrained('children')->onDelete('cascade');
-            $table->float('height');
+            $table->foreignId('disease_id')->constrained('diseases')->onDelete('cascade');
+            $table->foreignId('symptom_id')->constrained('symptoms')->onDelete('cascade');
             $table->float('weight');
-            $table->boolean('is_poor_family');
-            $table->string('stunting_status')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('stunting_checks');
+        Schema::dropIfExists('disease_symptom');
     }
 };
+
