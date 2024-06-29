@@ -14,7 +14,7 @@ return new class extends Migration
             $table->float('height');
             $table->float('weight');
             $table->boolean('is_poor_family');
-            $table->string('stunting_status')->nullable();
+            $table->string('stunting_status')->default('Normal');
             $table->timestamps();
         });
     }

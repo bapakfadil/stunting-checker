@@ -22,7 +22,7 @@ class ChildController extends Controller
             'date_of_birth' => 'required|date',
             'father_name' => 'required|string|max:255',
             'mother_name' => 'required|string|max:255',
-            'is_poor_family' => 'required|boolean',
+            // 'is_poor_family' => 'required|boolean',
         ]);
 
         $child = Child::create($validatedData);
@@ -38,7 +38,7 @@ class ChildController extends Controller
         $symptoms = Symptom::all();
 
         if (!$child_id) {
-            return redirect()->route('children.createStepOne');
+            return redirect()->route('children.CreateStepOne');
         }
 
         return view('children.create-step-two', compact('symptoms'));
@@ -47,24 +47,27 @@ class ChildController extends Controller
     public function postCreateStepTwo(Request $request)
     {
         $validatedData = $request->validate([
+            'height' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'is_poor_family' => 'required|boolean',
             'symptoms' => 'required|array',
         ]);
 
         $child_id = $request->session()->get('child_id');
 
         if (!$child_id) {
-            return redirect()->route('children.create.step.one');
+            return redirect()->route('children.createStepOne');
         }
 
         $stuntingCheck = new StuntingCheck();
         $stuntingCheck->child_id = $child_id;
+        $stuntingCheck->height = $validatedData['height'];
+        $stuntingCheck->weight = $validatedData['weight'];
+        $stuntingCheck->is_poor_family = $validatedData['is_poor_family'];
+        $stuntingCheck->stunting_status = $this->calculateStuntingStatus($validatedData['symptoms']);
         $stuntingCheck->save();
 
         $stuntingCheck->symptoms()->attach($validatedData['symptoms']);
-
-        // Logika penilaian stunting menggunakan aturan yang sudah ditentukan
-        $stuntingCheck->stunting_status = $this->calculateStuntingStatus($validatedData['symptoms']);
-        $stuntingCheck->save();
 
         return redirect()->route('dashboard');
     }
@@ -72,9 +75,11 @@ class ChildController extends Controller
     private function calculateStuntingStatus($symptoms)
     {
         $rules = [
-            'Gizi Lebih' => [1, 2, 3],
-            'Marasmik-kwashiorkor' => [4, 5, 6, 7, 8, 9],
-            // Tambahkan aturan lainnya sesuai jurnal
+            'Gizi Lebih' => [24, 28, 36],
+            'Marasmik-kwashiorkor' => [23, 4, 5, 19, 26, 35],
+            'Gizi Kurang' => [9, 18, 33, 31, 25, 11, 10, 3],
+            'Kwashiokor' => [16, 14, 18, 6, 9, 19, 20, 2, 12, 21, 22, 32],
+            'Marasmus' => [6, 7, 20, 9, 12, 13, 15, 27, 29, 23, 30, 1, 2, 34, 17]
         ];
 
         foreach ($rules as $status => $ruleSymptoms) {

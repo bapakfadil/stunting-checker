@@ -28,7 +28,7 @@
                                 <td class="py-2 px-4 border-b border-gray-200">{{ $child->full_name }}</td>
                                 <td class="py-2 px-4 border-b border-gray-200">{{ $child->father_name }}</td>
                                 <td class="py-2 px-4 border-b border-gray-200">{{ $child->mother_name }}</td>
-                                <td class="py-2 px-4 border-b border-gray-200">{{ $child->stuntingCheck->stunting_status }}</td>
+                                <td class="py-2 px-4 border-b border-gray-200">{{ optional($child->stuntingCheck)->stunting_status ?? 'N/A' }}</td>
                                 <td class="py-2 px-4 border-b border-gray-200">
                                     <a href="{{ route('children.show', $child->id) }}" class="text-blue-500 hover:text-blue-700">Detail</a>
                                     <a href="{{ route('children.edit', $child->id) }}" class="text-blue-500 hover:text-blue-700">Edit</a>
