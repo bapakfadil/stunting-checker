@@ -12,6 +12,9 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('children', ChildController::class)->except(['create']);
+    Route::get('/children/{id}/edit', [ChildController::class, 'edit'])->name('children.edit');
+    Route::put('/children/{id}', [ChildController::class, 'update'])->name('children.update');
+    Route::get('/children/{id}', [ChildController::class, 'show'])->name('children.show');
 
     // Untuk create-step-one dan create-step-two
     Route::get('create-step-one', [ChildController::class, 'createStepOne'])->name('children.createStepOne');
