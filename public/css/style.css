@@ -1,0 +1,105 @@
+body {
+    font-family: "Open Sans", sans-serif;
+    background: url("/images/child-health.jpg") no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff; /* Mengubah warna teks menjadi putih agar kontras dengan background */
+}
+
+nav {
+    background: #fff; /* Membuat navbar sedikit transparan */
+    color: #000;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav .logo {
+    display: flex;
+    align-items: center;
+}
+
+nav .logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+nav .nav-title {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+nav .nav-links {
+    display: flex;
+    gap: 10px;
+}
+
+nav .nav-links a {
+    background: #366ee7;
+    color: #eee;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+nav .nav-links a:hover {
+    background: #e9f7fe;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5); /* Membuat container sedikit transparan */
+    border-radius: 10px;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.hero img {
+    max-width: 50%;
+    border-radius: 10px;
+}
+
+.hero-text {
+    max-width: 45%;
+}
+
+.hero-text h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.hero-text a {
+    background: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+footer {
+    background: rgba(0, 123, 255, 0.8); /* Membuat footer sedikit transparan */
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+}
