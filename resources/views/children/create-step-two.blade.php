@@ -30,12 +30,19 @@
                             </select>
                         </div>
 
-                        @foreach($symptoms as $symptom)
                         <div class="mb-4">
-                            <label for="symptom_{{ $symptom->id }}" class="block text-gray-700 text-sm font-bold mb-2">{{ $symptom->name }}</label>
-                            <input type="checkbox" name="symptoms[]" value="{{ $symptom->id }}" id="symptom_{{ $symptom->id }}">
+                            <label for="symptoms" class="block text-gray-700 text-sm font-bold mb-2">Gejala:</label>
+                            <select id="symptoms" name="symptoms[]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" multiple="multiple">
+                                @foreach($symptoms as $symptom)
+                                    <option value="{{ $symptom->id }}">{{ $symptom->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        @endforeach
+
+                        <div id="selected-symptoms" class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Gejala Terpilih:</label>
+                            <ul id="selected-symptom-list" class="list-disc pl-5"></ul>
+                        </div>
 
                         <div class="flex items-center justify-between">
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
@@ -48,3 +55,28 @@
         </div>
     </div>
 </x-app-layout>
+
+<!-- Tambahkan jQuery DataTable -->
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('#symptoms').select2({
+            placeholder: "Pilih gejala",
+            allowClear: true
+        });
+
+        $('#symptoms').on('change', function() {
+            var selectedSymptoms = $(this).val();
+            var symptomList = $('#selected-symptom-list');
+            symptomList.empty();
+
+            if (selectedSymptoms && selectedSymptoms.length > 0) {
+                selectedSymptoms.forEach(function(symptomId) {
+                    var symptomText = $('#symptoms option[value="' + symptomId + '"]').text();
+                    symptomList.append('<li>' + symptomText + '</li>');
+                });
+            }
+        });
+    });
+</script>
+@endsection
