@@ -22,11 +22,9 @@ class ChildController extends Controller
             'date_of_birth' => 'required|date',
             'father_name' => 'required|string|max:255',
             'mother_name' => 'required|string|max:255',
-            // 'is_poor_family' => 'required|boolean',
         ]);
 
         $child = Child::create($validatedData);
-
         $request->session()->put('child_id', $child->id);
 
         return redirect()->route('children.createStepTwo');
@@ -38,7 +36,7 @@ class ChildController extends Controller
         $symptoms = Symptom::all();
 
         if (!$child_id) {
-            return redirect()->route('children.CreateStepOne');
+            return redirect()->route('children.createStepOne')->withErrors(['message' => 'Data anak tidak ditemukan. Silakan lengkapi Langkah Pertama.']);
         }
 
         return view('children.create-step-two', compact('symptoms'));
@@ -56,7 +54,7 @@ class ChildController extends Controller
         $child_id = $request->session()->get('child_id');
 
         if (!$child_id) {
-            return redirect()->route('children.createStepOne');
+            return redirect()->route('children.createStepOne')->withErrors(['message' => 'Data anak tidak ditemukan. Silakan lengkapi Langkah Pertama.']);
         }
 
         $stuntingCheck = new StuntingCheck();
@@ -69,10 +67,10 @@ class ChildController extends Controller
 
         $stuntingCheck->symptoms()->attach($validatedData['symptoms']);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('success', 'Data anak berhasil dibuat.');
     }
 
-    private function calculateStuntingStatus($symptoms)
+    private function calculateStuntingStatus(array $symptoms)
     {
         $rules = [
             'Gizi Lebih' => [24, 28, 36],
@@ -82,13 +80,25 @@ class ChildController extends Controller
             'Marasmus' => [6, 7, 20, 9, 12, 13, 15, 27, 29, 23, 30, 1, 2, 34, 17]
         ];
 
+        // Cek jika user hanya memasukkan 1 hingga 3 gejala
+        if (count($symptoms) <= 3) {
+            foreach ($rules as $status => $ruleSymptoms) {
+                if (array_intersect($symptoms, $ruleSymptoms) === $symptoms) {
+                    return $status;
+                }
+            }
+            return 'Normal';
+        }
+
+        // Cek jika gejala user sesuai dengan salah satu aturan
         foreach ($rules as $status => $ruleSymptoms) {
             if (empty(array_diff($ruleSymptoms, $symptoms))) {
                 return $status;
             }
         }
 
-        return 'Normal';
+        // Jika tidak ada kecocokan dengan aturan
+        return 'Hasil tidak ditemukan';
     }
 
     public function show($id)
@@ -105,15 +115,25 @@ class ChildController extends Controller
 
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'place_of_birth' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'father_name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
+        ]);
+
         $child = Child::findOrFail($id);
-        $child->update($request->all());
-        return redirect()->route('dashboard');
+        $child->update($validatedData);
+
+        return redirect()->route('dashboard')->with('success', 'Data anak berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $child = Child::findOrFail($id);
         $child->delete();
-        return redirect()->route('dashboard');
+
+        return redirect()->route('dashboard')->with('success', 'Data anak berhasil dihapus.');
     }
 }
