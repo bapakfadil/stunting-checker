@@ -25,6 +25,14 @@
                                 <td class="border px-4 py-2">{{ $child->mother_name }}</td>
                             </tr>
                             <tr>
+                                <td class="border px-4 py-2 font-bold">Tanggal Lahir</td>
+                                <td class="border px-4 py-2">{{ $child->date_of_birth }}</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2 font-bold">Umur</td>
+                                <td class="border px-4 py-2">{{ $age }} tahun</td>
+                            </tr>
+                            <tr>
                                 <td class="border px-4 py-2 font-bold">Gejala</td>
                                 <td class="border px-4 py-2">
                                     @foreach($child->stuntingCheck->symptoms as $symptom)

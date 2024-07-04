@@ -7,6 +7,7 @@ use App\Models\StuntingCheck;
 use App\Models\Symptom;
 use App\Models\Disease;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ChildController extends Controller
 {
@@ -113,9 +114,12 @@ class ChildController extends Controller
             $disease = Disease::where('name', $stuntingStatus)->first();
         }
 
-        return view('children.show', compact('child', 'disease'));
-    }
+        // Hitung umur anak
+        $dateOfBirth = Carbon::parse($child->date_of_birth);
+        $age = $dateOfBirth->age;
 
+        return view('children.show', compact('child', 'disease', 'age'));
+    }
 
     public function edit($id)
     {
