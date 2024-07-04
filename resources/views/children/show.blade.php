@@ -9,16 +9,35 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-bold">Detail Anak</h3>
-                    <p><strong>Nama Anak:</strong> {{ $child->full_name }}</p>
-                    <p><strong>Nama Ayah:</strong> {{ $child->father_name }}</p>
-                    <p><strong>Nama Ibu:</strong> {{ $child->mother_name }}</p>
-                    <p><strong>Status Stunting:</strong> {{ optional($child->stuntingCheck)->stunting_status ?? 'N/A' }}</p>
-                    <p><strong>Gejala:</strong>
-                        @foreach($child->stuntingCheck->symptoms as $symptom)
-                            {{ $symptom->name }},
-                        @endforeach
-                    </p>
+                    <h3 class="text-lg font-bold text-center mb-4">Detail Anak</h3>
+                    <table class="min-w-full bg-white">
+                        <tbody>
+                            <tr>
+                                <td class="border px-3 py-2 font-bold">Nama Anak:</td>
+                                <td class="border px-4 py-2">{{ $child->full_name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2 font-bold">Nama Ayah:</td>
+                                <td class="border px-4 py-2">{{ $child->father_name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2 font-bold">Nama Ibu:</td>
+                                <td class="border px-4 py-2">{{ $child->mother_name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2 font-bold">Status Stunting:</td>
+                                <td class="border px-4 py-2">{{ optional($child->stuntingCheck)->stunting_status ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2 font-bold">Gejala:</td>
+                                <td class="border px-4 py-2">
+                                    @foreach($child->stuntingCheck->symptoms as $symptom)
+                                        {{ $symptom->name }}{{ !$loop->last ? ',' : '' }}
+                                    @endforeach
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

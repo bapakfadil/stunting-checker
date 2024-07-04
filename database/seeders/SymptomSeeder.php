@@ -10,14 +10,14 @@ class SymptomSeeder extends Seeder
     public function run()
     {
         $symptoms = [
-            ['code' => 'G001', 'name' => 'Berat badan menurun'],
+            ['code' => 'G001', 'name' => 'Beran badan menurun'],
             ['code' => 'G002', 'name' => 'Mudah menangis'],
-            ['code' => 'G003', 'name' => 'Proporsi tubuh cenderung normal namun balita terlihat lebih muda/kecil diusianya.'],
+            ['code' => 'G003', 'name' => 'Proporsi tubuh cenderung normal namun balita terlihat lebih muda/kecil untuk usianya'],
             ['code' => 'G004', 'name' => 'Otot-otot melemah'],
-            ['code' => 'G005', 'name' => 'Balita menjadi pendiam'],
+            ['code' => 'G005', 'name' => 'Balita akan menjadi lebih pendiam dan tidak ingin berbuat banyak kontak mata dengan orang sekeliling.'],
             ['code' => 'G006', 'name' => 'Diare kronis'],
             ['code' => 'G007', 'name' => 'Infeksi berulang'],
-            ['code' => 'G008', 'name' => 'Terlambatnya perkembangan intelektual'],
+            ['code' => 'G008', 'name' => 'Terhambatnya perkembangan intelektual, kecerdasan'],
             ['code' => 'G009', 'name' => 'Pertumbuhan tulang melambat'],
             ['code' => 'G010', 'name' => 'Fokus ingatan terganggu'],
             ['code' => 'G011', 'name' => 'Rupa balita kian muda dari anak seumurannya'],
@@ -28,7 +28,7 @@ class SymptomSeeder extends Seeder
             ['code' => 'G016', 'name' => 'Kehilangan selera makan'],
             ['code' => 'G017', 'name' => 'Menurunnya perkembangan kognitif'],
             ['code' => 'G018', 'name' => 'Kelelahan parah'],
-            ['code' => 'G019', 'name' => 'Bengkak di tungkai, kaki, lengan, tangan, dan muka'],
+            ['code' => 'G019', 'name' => 'Edema (pembengkakan) di bagian tungkai, kaki, lengan, tangan, serta muka (Cairan)'],
             ['code' => 'G020', 'name' => 'Terhalangnya struktur imun tubuh, hingga muncul peradangan'],
             ['code' => 'G021', 'name' => 'Bintik dan bersisik di tubuh'],
             ['code' => 'G022', 'name' => 'Tanda jari membekas pada kulit setelah disentuh'],
@@ -44,7 +44,7 @@ class SymptomSeeder extends Seeder
             ['code' => 'G032', 'name' => 'Perut semakin membuncit'],
             ['code' => 'G033', 'name' => 'Sanitasi yang buruk'],
             ['code' => 'G034', 'name' => 'Tubuh pendek dari seusianya'],
-            ['code' => 'G035', 'name' => 'Lahir premature'],
+            ['code' => 'G035', 'name' => 'Lahir prematur'],
             ['code' => 'G036', 'name' => 'Tubuh gemuk'],
         ];
 
