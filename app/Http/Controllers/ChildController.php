@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Child;
 use App\Models\StuntingCheck;
 use App\Models\Symptom;
+use App\Models\Disease;
 use Illuminate\Http\Request;
 
 class ChildController extends Controller
@@ -104,8 +105,17 @@ class ChildController extends Controller
     public function show($id)
     {
         $child = Child::with('stuntingCheck.symptoms')->findOrFail($id);
-        return view('children.show', compact('child'));
+        $stuntingStatus = optional($child->stuntingCheck)->stunting_status;
+
+        // Ambil data disease berdasarkan status stunting
+        $disease = null;
+        if ($stuntingStatus) {
+            $disease = Disease::where('name', $stuntingStatus)->first();
+        }
+
+        return view('children.show', compact('child', 'disease'));
     }
+
 
     public function edit($id)
     {

@@ -13,29 +13,39 @@
                     <table class="min-w-full bg-white">
                         <tbody>
                             <tr>
-                                <td class="border px-3 py-2 font-bold">Nama Anak:</td>
+                                <td class="border px-3 py-2 font-bold">Nama Anak</td>
                                 <td class="border px-4 py-2">{{ $child->full_name }}</td>
                             </tr>
                             <tr>
-                                <td class="border px-4 py-2 font-bold">Nama Ayah:</td>
+                                <td class="border px-4 py-2 font-bold">Nama Ayah</td>
                                 <td class="border px-4 py-2">{{ $child->father_name }}</td>
                             </tr>
                             <tr>
-                                <td class="border px-4 py-2 font-bold">Nama Ibu:</td>
+                                <td class="border px-4 py-2 font-bold">Nama Ibu</td>
                                 <td class="border px-4 py-2">{{ $child->mother_name }}</td>
                             </tr>
                             <tr>
-                                <td class="border px-4 py-2 font-bold">Status Stunting:</td>
-                                <td class="border px-4 py-2">{{ optional($child->stuntingCheck)->stunting_status ?? 'N/A' }}</td>
-                            </tr>
-                            <tr>
-                                <td class="border px-4 py-2 font-bold">Gejala:</td>
+                                <td class="border px-4 py-2 font-bold">Gejala</td>
                                 <td class="border px-4 py-2">
                                     @foreach($child->stuntingCheck->symptoms as $symptom)
                                         {{ $symptom->name }}{{ !$loop->last ? ',' : '' }}
                                     @endforeach
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="border px-4 py-2 font-bold">Status Stunting</td>
+                                <td class="border px-4 py-2">{{ optional($child->stuntingCheck)->stunting_status ?? 'N/A' }}</td>
+                            </tr>
+                            @if($disease)
+                                <tr>
+                                    <td class="border px-4 py-2 font-bold">Penjelasan</td>
+                                    <td class="border px-4 py-2">{{ $disease->description }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="border px-4 py-2 font-bold">Solusi</td>
+                                    <td class="border px-4 py-2">{{ $disease->solution }}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
