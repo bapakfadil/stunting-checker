@@ -132,41 +132,47 @@ class ChildController extends Controller
 
 
     public function update(Request $request, $id)
-{
-    // Validasi data untuk child
-    $validatedChildData = $request->validate([
-        'full_name' => 'required|string|max:255',
-        'place_of_birth' => 'required|string|max:255',
-        'date_of_birth' => 'required|date',
-        'father_name' => 'required|string|max:255',
-        'mother_name' => 'required|string|max:255',
-    ]);
+    {
+        // Validasi data untuk child
+        $validatedChildData = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'place_of_birth' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'father_name' => 'required|string|max:255',
+            'mother_name' => 'required|string|max:255',
+        ]);
 
-    // Validasi data untuk stunting check
-    $validatedStuntingCheckData = $request->validate([
-        'height' => 'required|numeric',
-        'weight' => 'required|numeric',
-        'is_poor_family' => 'required|boolean',
-        'symptoms' => 'required|array',
-    ]);
+        // Validasi data untuk stunting check
+        $validatedStuntingCheckData = $request->validate([
+            'height' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'is_poor_family' => 'required|boolean',
+            'symptoms' => 'required|array',
+        ]);
 
-    // Update data child
-    $child = Child::findOrFail($id);
-    $child->update($validatedChildData);
+        // Update data child
+        $child = Child::findOrFail($id);
+        $child->update($validatedChildData);
 
-    // Update data stunting check
-    $stuntingCheck = StuntingCheck::findOrFail($request->input('stunting_check_id'));
-    $stuntingCheck->update([
-        'height' => $validatedStuntingCheckData['height'],
-        'weight' => $validatedStuntingCheckData['weight'],
-        'is_poor_family' => $validatedStuntingCheckData['is_poor_family'],
-        'stunting_status' => $this->calculateStuntingStatus($validatedStuntingCheckData['symptoms']),
-    ]);
+        // Update data stunting check
+        $stuntingCheck = StuntingCheck::findOrFail($request->input('stunting_check_id'));
+        $stuntingCheck->update([
+            'height' => $validatedStuntingCheckData['height'],
+            'weight' => $validatedStuntingCheckData['weight'],
+            'is_poor_family' => $validatedStuntingCheckData['is_poor_family'],
+            'stunting_status' => $this->calculateStuntingStatus($validatedStuntingCheckData['symptoms']),
+        ]);
 
-    // Sync symptoms
-    $stuntingCheck->symptoms()->sync($validatedStuntingCheckData['symptoms']);
+        // Sync symptoms
+        $stuntingCheck->symptoms()->sync($validatedStuntingCheckData['symptoms']);
 
-    return redirect()->route('dashboard')->with('success', 'Data anak berhasil diperbarui.');
-}
+        return redirect()->route('dashboard')->with('success', 'Data anak berhasil diperbarui.');
+    }
 
+    public function destroy($id)
+    {
+        $child = Child::findOrFail($id);
+        $child->delete();
+        return redirect()->route('dashboard');
+    }
 }
